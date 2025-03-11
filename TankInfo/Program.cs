@@ -2,14 +2,31 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            List<Tank> Tanks = new List<Tank>
+            string path = "C:\\Users\\georg\\OneDrive\\Рабочий стол\\library.txt";
+            List<Tank> Tanks = new List<Tank>();
+
+            if (File.Exists(path))
             {
-                new Tank("T-34", "USSR", "Medium Tank", 500, 1939, 76),
-                new Tank("Tiger", "Nazi Germany", "Heavy Tank", 700, 1942, 88),
-                new Tank("M4A3E8 Fury", "USA", "Medium Tank", 500, 1944, 76)
-            };
+                using (StreamReader reader = new StreamReader(path))
+                {
+                    string? line;
+                    while ((line = await reader.ReadLineAsync()) != null)
+                    {
+                        string[] parts = line.Split(',');
+                        if (parts.Length == 7 &&
+                            int.TryParse(parts[3], out int horsePower) &&
+                            int.TryParse(parts[4], out int release) &&
+                            int.TryParse(parts[5], out int gunDiameter) &&
+                            int.TryParse(parts[6], out int mass))
+                        {
+                            Tanks.Add(new Tank(parts[0], parts[1], parts[2], horsePower, release, gunDiameter, mass));
+                        }
+                    }
+                }
+            }
+
             string choice;
             while (true)
             {
@@ -17,7 +34,9 @@
                 choice = Console.ReadLine().ToLower();
                 if (choice == "y")
                 {
-                    Tanks.Add(AddTank());
+                    Tank newTank = AddTank();
+                    Tanks.Add(newTank);
+                    await File.AppendAllTextAsync(path, $"{newTank.Model},{newTank.Nation},{newTank.Type},{newTank.HorsePower},{newTank.Release},{newTank.GunDiameter},{newTank.Mass}\n");
                 }
                 else
                     break;
@@ -42,8 +61,10 @@
             int release = int.Parse(Console.ReadLine());
             Console.Write("Enter gun diameter: ");
             int gunDiameter = int.Parse(Console.ReadLine());
+            Console.Write("Enter mass: ");
+            int mass = int.Parse(Console.ReadLine());
 
-            return new Tank(model, nation, type, horsePower, release, gunDiameter);
+            return new Tank(model, nation, type, horsePower, release, gunDiameter, mass);
         }
     }
 }
@@ -56,8 +77,9 @@ class Tank
     public int HorsePower;
     public int Release;
     public int GunDiameter;
+    public int Mass;
 
-    public Tank(string model, string nation, string type, int horsePower, int release, int gunDiameter)
+    public Tank(string model, string nation, string type, int horsePower, int release, int gunDiameter, int mass)
     {
         Model = model;
         Nation = nation;
@@ -65,6 +87,7 @@ class Tank
         HorsePower = horsePower;
         Release = release;
         GunDiameter = gunDiameter;
+        Mass = mass;
     }
 
     public void ShowTechnicalPassport()
@@ -74,6 +97,7 @@ class Tank
             $"\nType: {Type}" +
             $"\nHorsepower: {HorsePower}" +
             $"\nRealese date: {Release}" +
-            $"\nDiameter Gun: {GunDiameter}\n");
+            $"\nDiameter Gun: {GunDiameter}" +
+            $"\nMass: {Mass}\n");
     }
 }
