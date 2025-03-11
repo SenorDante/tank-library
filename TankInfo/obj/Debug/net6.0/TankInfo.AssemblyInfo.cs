@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TankInfo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d2cefc26a6de8eec669b565282be40f13e9bfa5b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc60794af3ef3521093722aa5408f8f9b9d87df5")]
 [assembly: System.Reflection.AssemblyProductAttribute("TankInfo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TankInfo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

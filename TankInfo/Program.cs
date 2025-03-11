@@ -7,22 +7,24 @@
             string path = "C:\\Users\\georg\\OneDrive\\Рабочий стол\\library.txt";
             List<Tank> Tanks = new List<Tank>();
 
-            if (File.Exists(path))
+            if (!File.Exists(path))
             {
-                using (StreamReader reader = new StreamReader(path))
+                File.Create(path).Dispose();
+            }
+
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string? line;
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    string? line;
-                    while ((line = await reader.ReadLineAsync()) != null)
+                    string[] parts = line.Split(',');
+                    if (parts.Length == 7 &&
+                        int.TryParse(parts[3], out int horsePower) &&
+                        int.TryParse(parts[4], out int release) &&
+                        int.TryParse(parts[5], out int gunDiameter) &&
+                        int.TryParse(parts[6], out int mass))
                     {
-                        string[] parts = line.Split(',');
-                        if (parts.Length == 7 &&
-                            int.TryParse(parts[3], out int horsePower) &&
-                            int.TryParse(parts[4], out int release) &&
-                            int.TryParse(parts[5], out int gunDiameter) &&
-                            int.TryParse(parts[6], out int mass))
-                        {
-                            Tanks.Add(new Tank(parts[0], parts[1], parts[2], horsePower, release, gunDiameter, mass));
-                        }
+                        Tanks.Add(new Tank(parts[0], parts[1], parts[2], horsePower, release, gunDiameter, mass));
                     }
                 }
             }
